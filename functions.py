@@ -1,5 +1,20 @@
 # - - - - Importaciones necesarias - - - -
 import csv
+import os
+import time
+from colorama import Fore, Back, Style
+# - - - - Funciones de colores - - - -
+
+# Función para mostrar mensajes de error en rojo
+def mensaje_error(texto):
+    print(Fore.RED + Style.BRIGHT + texto)
+    print(Style.RESET_ALL)
+
+# Función para mostrar mensajes de éxito en verde
+def mensaje_exito(texto):
+    print(Fore.GREEN + Style.BRIGHT + texto)
+    print(Style.RESET_ALL)
+
 # - - - - Funciones de validación - - - -
 
 # Función para validar enteros
@@ -9,15 +24,15 @@ def validacion_entero(mensaje1, mensaje2 = None, negativo = True):
             numero = int(input(mensaje1))
             if negativo:
                 if numero <= 0:
-                    print("ERROR! No se permiten numero negativos o cero")
+                    mensaje_error("ERROR! No se permiten numero negativos o cero")
                     continue
             if mensaje2 != None:
                 print(mensaje2) 
             return int(numero)
         except ValueError: 
-            print("ERROR! Debe ingresar un numero entero")
+            mensaje_error("ERROR! Debe ingresar un numero entero")
         except Exception as e: 
-            print(f"Ha ocurrido un error inesperado: {e}")
+            mensaje_error(f"Ha ocurrido un error inesperado: {e}")
 
 # Función para validar flotantes
 def validacion_float(mensaje1, mensaje2 = None):
@@ -25,15 +40,15 @@ def validacion_float(mensaje1, mensaje2 = None):
         try:
             numero = float(input(mensaje1))
             if numero <= 0:
-                print("ERROR! No se permiten numero negativos o cero")
+                mensaje_error("ERROR! No se permiten numero negativos o cero")
                 continue
             if mensaje2 != None:
                 print(mensaje2)
             return float(numero)
         except ValueError:
-            print("ERROR! Debe ingresar un numero positivo")
+            mensaje_error("ERROR! Debe ingresar un numero positivo")
         except Exception as e:
-            print(f"Ha ocurrido un error inesperado: {e}")
+            mensaje_error(f"Ha ocurrido un error inesperado: {e}")
 
 # Función para validar texto
 def validacion_texto(mensaje1, mensaje2 = None):
@@ -41,13 +56,13 @@ def validacion_texto(mensaje1, mensaje2 = None):
         try:
             texto = input(mensaje1).strip()
             if not texto.isalpha():
-                print("ERROR! Solo se puede ingresar texto")
+                mensaje_error("ERROR! Solo se puede ingresar texto")
                 continue
             if mensaje2 != None:
                 print(mensaje2)
             return texto
         except Exception as e:
-            print(f"Ha ocurrido un error inesperado: {e}")
+            mensaje_error(f"Ha ocurrido un error inesperado: {e}")
 
 # Función para validar si un país ya existe en el dataset
 def validar_pais_existente(nombre, dataset):
@@ -63,27 +78,58 @@ def validar_continente(mensaje1, mensaje2 = None):
         try:
             continente = validacion_texto(mensaje1).lower()
             if continente not in continentes_validos:
-                print(f"ERROR! Continente no válido. Los continentes válidos son: {', '.join(continentes_validos)}")
+                mensaje_error(f"ERROR! Continente no válido. Los continentes válidos son: {', '.join(continentes_validos)}")
                 continue
             if mensaje2 != None:
                 print(mensaje2)
             return continente.capitalize()
         except Exception as e:
-            print(f"Ha ocurrido un error inesperado: {e}")
+            mensaje_error(f"Ha ocurrido un error inesperado: {e}")
 
 # - - - - Funciones principales - - - -
 
-# Funcion para guardar cambios en el archvio csv
-def guardar_paises(paises):
+# Función para borrar la consola (compatible con Windows y Unix)
+def limpiar_consola(tiempo_espera = None):
+    if tiempo_espera is not None:
+        time.sleep(tiempo_espera)
+        os.system('cls' if os.name == 'nt' else 'clear')
+    else:
+        os.system('cls' if os.name == 'nt' else 'clear')
+
+# Función para esperar a que el usuario presione una tecla antes de continuar
+def esperar_tecla():
+    input("Presione Enter para continuar...")
+
+# Función para cargar los datos de países desde un archivo CSV
+def cargar_paises():
+    dataset = []
+    try:
+        with open("dataset.csv", "r", encoding="utf-8") as archivo:
+            reader = csv.DictReader(archivo)
+            for row in reader:
+                pais = {
+                    "nombre": row["nombre"],
+                    "poblacion": int(row["poblacion"]),
+                    "superficie": float(row["superficie"]),
+                    "continente": row["continente"]
+                }
+                dataset.append(pais)
+    except FileNotFoundError:
+        mensaje_error("Archivo 'dataset.csv' no encontrado. Se cargará el dataset inicial.")
+    except Exception as e:
+        mensaje_error(f"Ha ocurrido un error al cargar los datos: {e}")
+    return dataset
+
+# Función para guardar cambios en el archvio csv
+def guardar_paises(dataset):
     fieldnames = ["nombre", "poblacion", "superficie", "continente"]
     with open("dataset.csv", "w", newline="", encoding="utf-8") as archivo:
         writer = csv.DictWriter(archivo, fieldnames=fieldnames)
         writer.writeheader()
-        writer.writerows(paises)
+        writer.writerows(dataset)
 
 # Función para mostrar el menú de opciones al usuario
 def mostrar_menu():
-    print()
     print("=== Gestor de datos de países ===")
     print("> 1. Agregar un nuevo país")
     print("> 2. Actualizar los datos de población y superficie de un país existente")
@@ -101,10 +147,11 @@ def mostrar_pais(pais):
 
 # Función para agregar un nuevo país al dataset
 def agregar_pais(dataset):
-    print()
+    limpiar_consola()
     nombre = validacion_texto("Ingrese el nombre del país: ")
     if validar_pais_existente(nombre, dataset):
-        print(f"El país '{nombre.capitalize()}' ya existe en el sistema. No se puede agregar nuevamente.")
+        mensaje_error(f"El país '{nombre.capitalize()}' ya existe en el sistema. No se puede agregar nuevamente.")
+        limpiar_consola(1.5)
         return
     else:
         poblacion = validacion_entero("Ingrese la población del país: ")
@@ -117,11 +164,12 @@ def agregar_pais(dataset):
             "continente": continente
         }
         dataset.append(nuevo_pais)
-        print(f"País '{nombre.capitalize()}' cargado exitosamente al sistema.")
+        mensaje_exito(f"País '{nombre.capitalize()}' cargado exitosamente al sistema.")
+    limpiar_consola(1.5)
 
 # Funcion para buscar un pais (coincidencia exacta o parcial)
 def buscar_paises(dataset):
-    print()
+    limpiar_consola()
     busqueda = validacion_texto("Ingrese el nombre del pais: ", None).capitalize()
     encontrado = False
     for pais in dataset:
@@ -133,4 +181,8 @@ def buscar_paises(dataset):
             encontrado = True
             mostrar_pais(pais)
     if not encontrado:
-        print("No se encontraron paises relacionados a esa busqueda!")
+        mensaje_error("No se encontraron paises relacionados a esa busqueda!")
+        limpiar_consola(1.5)
+    else:
+        esperar_tecla()
+        limpiar_consola()

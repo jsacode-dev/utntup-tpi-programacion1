@@ -1,41 +1,12 @@
-# Nombre (string)
-# Población (int)
-# Superficie en km2 (float)
-# Continente (string)
-
 # - - - - Importaciones necesarias - - - -
 from functions import *
 
 # - - - - Programa principal - - - -
 
-dataset = [
-    {
-        "nombre": "Argentina",
-        "poblacion": 45376763,
-        "superficie": 2780400,
-        "continente": "América"
-    },
-    {
-        "nombre": "Japon",
-        "poblacion": 125800000,
-        "superficie": 377975,
-        "continente": "Asia"
-    },
-    {
-        "nombre": "Brasil",
-        "poblacion": 213993437,
-        "superficie": 8515767,
-        "continente": "América"
-    },
-    {
-        "nombre": "Alemania",
-        "poblacion": 83149300,
-        "superficie": 357022,
-        "continente": "Europa"
-    }
-]
+dataset = cargar_paises() # Cargar datos desde el archivo CSV al iniciar el programa
 
 while True:
+    limpiar_consola() # Limpiar la consola al inicio de cada iteración para mejorar la legibilidad
     mostrar_menu()
     opcion = validacion_entero("Seleccione una opción: ", None, False) # Acá va validación de string
     match opcion:
@@ -53,6 +24,7 @@ while True:
             pass
         case 7: # Salir del programa
             print("Gracias por usar el programa. ¡Hasta luego!")
+            guardar_paises(dataset)
             break
         case _: # Opción no válida
             print("Opción no válida. Por favor, seleccione una opción del menú.")
