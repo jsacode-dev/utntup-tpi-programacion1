@@ -16,7 +16,7 @@ dataset = [
         "continente": "América"
     },
     {
-        "nombre": "Japón",
+        "nombre": "Japon",
         "poblacion": 125800000,
         "superficie": 377975,
         "continente": "Asia"
@@ -44,7 +44,7 @@ while True:
         case 2: # Actualizar los datos de población y superficie de un país existente
             pass
         case 3: # Buscar un país por nombre (coincidencia parcial o exacta)
-            pass
+            buscar_paises(dataset)
         case 4: # Filtrar por contiente, rango de poblacióno o rango de superficie
             pass
         case 5: # Ordenar países por nombre, población o superficie (ascendente o descendente)
@@ -54,7 +54,5 @@ while True:
         case 7: # Salir del programa
             print("Gracias por usar el programa. ¡Hasta luego!")
             break
-        case -1: # DEBUG - Mostrar todos los países y sus datos
-            print(obtener_paises("dataset.csv"))
         case _: # Opción no válida
             print("Opción no válida. Por favor, seleccione una opción del menú.")

@@ -1,6 +1,5 @@
 # - - - - Importaciones necesarias - - - -
 import csv
-
 # - - - - Funciones de validación - - - -
 
 # Función para validar enteros
@@ -59,7 +58,7 @@ def validar_pais_existente(nombre, dataset):
 
 # Función para validar continente
 def validar_continente(mensaje1, mensaje2 = None):
-    continentes_validos = ["américa", "asia", "europa", "áfrica", "oceanía"]
+    continentes_validos = ["america", "asia", "europa", "africa", "oceania"]
     while True:
         try:
             continente = validacion_texto(mensaje1).lower()
@@ -74,6 +73,14 @@ def validar_continente(mensaje1, mensaje2 = None):
 
 # - - - - Funciones principales - - - -
 
+# Funcion para guardar cambios en el archvio csv
+def guardar_paises(paises):
+    fieldnames = ["nombre", "poblacion", "superficie", "continente"]
+    with open("dataset.csv", "w", newline="", encoding="utf-8") as archivo:
+        writer = csv.DictWriter(archivo, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(paises)
+
 # Función para mostrar el menú de opciones al usuario
 def mostrar_menu():
     print()
@@ -85,14 +92,12 @@ def mostrar_menu():
     print("> 5. Ordenar países por nombre, población o superficie")
     print("> 6. Mostrar estadísticas")
     print("> 7. Salir del programa")
-    # Opciones de depuración
-    print("> -1. Mostrar todos los países y sus datos (DEBUG)")
 
-# Función para obtener todos los países y sus datos, y guardarlos en una lista de diccionarios
-def obtener_paises(dataset):
-    with open(dataset, mode="r", encoding="utf-8") as archivo:
-        lector = csv.DictReader(archivo)
-        return list(lector)
+# Funcion para mostrar paises por consola
+def mostrar_pais(pais):
+    for k, v in pais.items():
+        print(f"{k.capitalize()}: {v}")
+    print("-"*50)
 
 # Función para agregar un nuevo país al dataset
 def agregar_pais(dataset):
@@ -112,4 +117,20 @@ def agregar_pais(dataset):
             "continente": continente
         }
         dataset.append(nuevo_pais)
-        print(f"País '{nombre}' cargado exitosamente al sistema.")
+        print(f"País '{nombre.capitalize()}' cargado exitosamente al sistema.")
+
+# Funcion para buscar un pais (coincidencia exacta o parcial)
+def buscar_paises(dataset):
+    print()
+    busqueda = validacion_texto("Ingrese el nombre del pais: ", None).capitalize()
+    encontrado = False
+    for pais in dataset:
+        if pais["nombre"] == busqueda or pais["nombre"].startswith(busqueda):
+            if not encontrado:
+                print("-"*50)
+                print("RESULTADOS ENCONTRADOS")
+                print("-"*50)
+            encontrado = True
+            mostrar_pais(pais)
+    if not encontrado:
+        print("No se encontraron paises relacionados a esa busqueda!")
