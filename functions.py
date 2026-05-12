@@ -1,8 +1,10 @@
 # - - - - Importaciones necesarias - - - -
+
 import csv
 import os
 import time
 from colorama import Fore, Back, Style
+
 # - - - - Funciones de colores - - - -
 
 # Función para mostrar mensajes de error en rojo
@@ -106,14 +108,28 @@ def cargar_paises():
     try:
         with open("dataset.csv", "r", encoding="utf-8") as archivo:
             reader = csv.DictReader(archivo)
-            for row in reader:
-                pais = {
-                    "nombre": row["nombre"],
-                    "poblacion": int(row["poblacion"]),
-                    "superficie": float(row["superficie"]),
-                    "continente": row["continente"]
-                }
-                dataset.append(pais)
+            filas_invalidas = [] # Lista para almacenar los números de línea de las filas inválidas
+            for numero_linea, row in enumerate(reader, start=2): # Empezamos en 2 para contar la línea del encabezado
+                try:
+                    nombre = row["nombre"].strip().capitalize()
+                    poblacion = int(row["poblacion"])
+                    superficie = float(row["superficie"])
+                    continente = row["continente"].strip().capitalize()
+                    if not nombre or not continente:
+                        raise ValueError("Nombre o continente vacios.")
+                    if poblacion <= 0 or superficie <= 0:
+                        raise ValueError("Poblacion o superficie no validas.")
+                    pais = {
+                        "nombre": nombre,
+                        "poblacion": poblacion,
+                        "superficie": superficie,
+                        "continente": continente
+                    }
+                    dataset.append(pais)
+                except (ValueError, TypeError, KeyError):
+                    filas_invalidas.append(numero_linea)
+            if filas_invalidas:
+                mensaje_error(f"Se omitieron {len(filas_invalidas)} fila(s) invalidas del CSV: {', '.join(map(str, filas_invalidas))}")
     except FileNotFoundError:
         mensaje_error("Archivo 'dataset.csv' no encontrado. Se cargará el dataset inicial.")
     except Exception as e:
@@ -166,6 +182,7 @@ def agregar_pais(dataset):
         dataset.append(nuevo_pais)
         mensaje_exito(f"País '{nombre.capitalize()}' cargado exitosamente al sistema.")
     limpiar_consola(1.5)
+    return dataset
 
 # Funcion para buscar un pais (coincidencia exacta o parcial)
 def buscar_paises(dataset):
@@ -173,7 +190,7 @@ def buscar_paises(dataset):
     busqueda = validacion_texto("Ingrese el nombre del pais: ", None).capitalize()
     encontrado = False
     for pais in dataset:
-        if pais["nombre"] == busqueda or pais["nombre"].startswith(busqueda):
+        if pais["nombre"].startswith(busqueda):
             if not encontrado:
                 print("-"*50)
                 print("RESULTADOS ENCONTRADOS")

@@ -6,12 +6,12 @@ from functions import *
 dataset = cargar_paises() # Cargar datos desde el archivo CSV al iniciar el programa
 
 while True:
-    limpiar_consola() # Limpiar la consola al inicio de cada iteración para mejorar la legibilidad
+    # limpiar_consola()  Limpiar la consola al inicio de cada iteración para mejorar la legibilidad
     mostrar_menu()
     opcion = validacion_entero("Seleccione una opción: ", None, False) # Acá va validación de string
     match opcion:
         case 1: # Agregar un nuevo país (con todos los datos necesarios)
-            agregar_pais(dataset)
+            dataset = agregar_pais(dataset)
         case 2: # Actualizar los datos de población y superficie de un país existente
             pass
         case 3: # Buscar un país por nombre (coincidencia parcial o exacta)
