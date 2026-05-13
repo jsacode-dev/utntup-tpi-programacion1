@@ -6,7 +6,7 @@ from functions import *
 dataset = cargar_paises() # Cargar datos desde el archivo CSV al iniciar el programa
 
 while True:
-    # limpiar_consola()  Limpiar la consola al inicio de cada iteración para mejorar la legibilidad
+    limpiar_consola()
     mostrar_menu()
     opcion = validacion_entero("Seleccione una opción: ", None, False) # Acá va validación de string
     match opcion:
@@ -21,7 +21,7 @@ while True:
         case 5: # Ordenar países por nombre, población o superficie (ascendente o descendente)
             pass
         case 6: # Mostrar estadísticas como país con mayor y menor población, promedio de población, promedio de superficie o cantidad de países por continente
-            pass
+            mostrar_estadisticas(dataset)
         case 7: # Salir del programa
             print("Gracias por usar el programa. ¡Hasta luego!")
             guardar_paises(dataset)

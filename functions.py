@@ -9,13 +9,11 @@ from colorama import Fore, Back, Style
 
 # Función para mostrar mensajes de error en rojo
 def mensaje_error(texto):
-    print(Fore.RED + Style.BRIGHT + texto)
-    print(Style.RESET_ALL)
+    print(Fore.RED + Style.BRIGHT + texto + Style.RESET_ALL)
 
 # Función para mostrar mensajes de éxito en verde
 def mensaje_exito(texto):
-    print(Fore.GREEN + Style.BRIGHT + texto)
-    print(Style.RESET_ALL)
+    print(Fore.GREEN + Style.BRIGHT + texto + Style.RESET_ALL)
 
 # - - - - Funciones de validación - - - -
 
@@ -37,13 +35,14 @@ def validacion_entero(mensaje1, mensaje2 = None, negativo = True):
             mensaje_error(f"Ha ocurrido un error inesperado: {e}")
 
 # Función para validar flotantes
-def validacion_float(mensaje1, mensaje2 = None):
+def validacion_float(mensaje1, mensaje2 = None, negativo = True):
     while True:
         try:
             numero = float(input(mensaje1))
-            if numero <= 0:
-                mensaje_error("ERROR! No se permiten numero negativos o cero")
-                continue
+            if negativo:
+                if numero <= 0:
+                    mensaje_error("ERROR! No se permiten numero negativos o cero")
+                    continue
             if mensaje2 != None:
                 print(mensaje2)
             return float(numero)
@@ -57,12 +56,14 @@ def validacion_texto(mensaje1, mensaje2 = None):
     while True:
         try:
             texto = input(mensaje1).strip()
-            if not texto.isalpha():
-                mensaje_error("ERROR! Solo se puede ingresar texto")
+            if not texto:
+                mensaje_error("ERROR! No se permiten campos vacios")
                 continue
             if mensaje2 != None:
                 print(mensaje2)
             return texto
+        except ValueError:
+            mensaje_error("ERROR! Debe ingresar un texto válido")
         except Exception as e:
             mensaje_error(f"Ha ocurrido un error inesperado: {e}")
 
@@ -168,7 +169,7 @@ def agregar_pais(dataset):
     if validar_pais_existente(nombre, dataset):
         mensaje_error(f"El país '{nombre.capitalize()}' ya existe en el sistema. No se puede agregar nuevamente.")
         limpiar_consola(1.5)
-        return
+        return dataset
     else:
         poblacion = validacion_entero("Ingrese la población del país: ")
         superficie = validacion_float("Ingrese la superficie del país en km2: ")
@@ -203,3 +204,30 @@ def buscar_paises(dataset):
     else:
         esperar_tecla()
         limpiar_consola()
+
+def mostrar_estadisticas(dataset):
+    limpiar_consola()
+    if not dataset:
+        mensaje_error("No hay datos disponibles para mostrar estadísticas.")
+        limpiar_consola(1.5)
+        return
+    pais_mayor_poblacion = max(dataset, key=lambda x: x["poblacion"])
+    pais_menor_poblacion = min(dataset, key=lambda x: x["poblacion"])
+    promedio_poblacion = sum(pais["poblacion"] for pais in dataset) / len(dataset)
+    promedio_superficie = sum(pais["superficie"] for pais in dataset) / len(dataset)
+    paises_por_continente = {}
+    for pais in dataset:
+        continente = pais["continente"]
+        if continente not in paises_por_continente:
+            paises_por_continente[continente] = 0
+        paises_por_continente[continente] += 1
+    
+    print(f"País con mayor población: {pais_mayor_poblacion['nombre']} ({pais_mayor_poblacion['poblacion']} habitantes)")
+    print(f"País con menor población: {pais_menor_poblacion['nombre']} ({pais_menor_poblacion['poblacion']} habitantes)")
+    print(f"Promedio de población: {promedio_poblacion:.2f} habitantes")
+    print(f"Promedio de superficie: {promedio_superficie:.2f} km2")
+    print("Cantidad de países por continente:")
+    for continente, cantidad in paises_por_continente.items():
+        print(f"  - {continente}: {cantidad} país(es)")
+    esperar_tecla()
+    limpiar_consola()

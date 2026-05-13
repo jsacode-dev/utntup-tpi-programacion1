@@ -1,31 +1,31 @@
 nombre,poblacion,superficie,continente
-Argentina,45376763,2780400,América
-Japon,125800000,377975,Asia
-Brasil,213993437,8515767,América
-Alemania,83149300,357022,Europa
-Chile,19629590,756102,América
-Uruguay,3426260,176215,América
-Paraguay,6703799,406752,América
-Bolivia,12388571,1098581,América
-Peru,33715471,1285216,América
-Colombia,52215503,1141748,América
-Mexico,129875529,1964375,América
-Estados Unidos,339996563,9833517,América
-Canada,38929902,9984670,América
-Espana,48373336,505990,Europa
-Francia,64756584,551695,Europa
-Italia,58870762,301340,Europa
-Reino Unido,67736802,243610,Europa
-Portugal,10305564,92212,Europa
-Rusia,144444359,17098246,Europa
-China,1425671352,9596961,Asia
-India,1428627663,3287263,Asia
-Corea del Sur,51784059,100210,Asia
-Indonesia,277534122,1904569,Asia
-Arabia Saudita,36947025,2149690,Asia
-Egipto,112716598,1002450,Africa
-Nigeria,223804632,923768,Africa
-Sudafrica,60414495,1221037,Africa
-Marruecos,37457971,446550,Africa
-Australia,26638544,7692024,Oceania
-Nueva Zelanda,5228100,268838,Oceania
+Argentina,45376763,2780400.0,América
+Japon,125800000,377975.0,Asia
+Brasil,213993437,8515767.0,América
+Alemania,83149300,357022.0,Europa
+Chile,19629590,756102.0,América
+Uruguay,3426260,176215.0,América
+Paraguay,6703799,406752.0,América
+Bolivia,12388571,1098581.0,América
+Peru,33715471,1285216.0,América
+Colombia,52215503,1141748.0,América
+Mexico,129875529,1964375.0,América
+Estados unidos,339996563,9833517.0,América
+Canada,38929902,9984670.0,América
+Espana,48373336,505990.0,Europa
+Francia,64756584,551695.0,Europa
+Italia,58870762,301340.0,Europa
+Reino unido,67736802,243610.0,Europa
+Portugal,10305564,92212.0,Europa
+Rusia,144444359,17098246.0,Europa
+China,1425671352,9596961.0,Asia
+India,1428627663,3287263.0,Asia
+Corea del sur,51784059,100210.0,Asia
+Indonesia,277534122,1904569.0,Asia
+Arabia saudita,36947025,2149690.0,Asia
+Egipto,112716598,1002450.0,Africa
+Nigeria,223804632,923768.0,Africa
+Sudafrica,60414495,1221037.0,Africa
+Marruecos,37457971,446550.0,Africa
+Australia,26638544,7692024.0,Oceania
+Nueva zelanda,5228100,268838.0,Oceania
