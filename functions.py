@@ -4,6 +4,8 @@ import csv
 import os
 import time
 from colorama import Fore, Back, Style
+from rich.console import Console
+from rich.table import Table
 
 # - - - - Funciones de colores - - - -
 
@@ -103,6 +105,18 @@ def limpiar_consola(tiempo_espera = None):
 def esperar_tecla():
     input("Presione Enter para continuar...")
 
+# Funcion para armar una tabla
+def armar_tabla(lista, table):
+    table.add_column("País", style="bold magenta", header_style="bold bright_green", justify="center")
+    table.add_column("Población", style="bold magenta", header_style="bold bright_green", justify="center")
+    table.add_column("Superficie", style="bold magenta", header_style="bold bright_green", justify="center")
+    table.add_column("Continente", style="bold magenta", header_style="bold bright_green", justify="center")
+    for pais in lista:
+        table.add_row(f"{pais["nombre"]}", f"{pais["poblacion"]}", f"{pais["superficie"]}", f"{pais["continente"]}")
+    Console().print(table)
+    esperar_tecla()
+    limpiar_consola()
+
 # Función para cargar los datos de países desde un archivo CSV
 def cargar_paises():
     dataset = []
@@ -147,14 +161,23 @@ def guardar_paises(dataset):
 
 # Función para mostrar el menú de opciones al usuario
 def mostrar_menu():
-    print("=== Gestor de datos de países ===")
-    print("> 1. Agregar un nuevo país")
-    print("> 2. Actualizar los datos de población y superficie de un país existente")
-    print("> 3. Buscar un país por nombre")
-    print("> 4. Filtrar por continente, rango de población o rango de superficie")
-    print("> 5. Ordenar países por nombre, población o superficie")
-    print("> 6. Mostrar estadísticas")
-    print("> 7. Salir del programa")
+    menu = {
+        1: "Agregar un nuevo país",
+        2: "Actualizar los datos de población y superficie de un país existente",
+        3: "Buscar un país por nombre",
+        4: "Filtrar por continente, rango de población o rango de superficie",
+        5: "Ordenar países por nombre, población o superficie",
+        6: "Mostrar estadísticas",
+        7: "Mostrar estadísticas",
+    }
+
+    tabla = Table(show_lines=True)
+    tabla.add_column("MENU PRICIPAL", style="bold bright_yellow", justify="center")
+
+    for k,v in menu.items():
+        tabla.add_row(f"{k}) {v}")
+    Console().print(tabla)
+
 
 # Funcion para mostrar paises por consola
 def mostrar_pais(pais):
@@ -205,6 +228,139 @@ def buscar_paises(dataset):
         esperar_tecla()
         limpiar_consola()
 
+# Funcion para filtrar países (Por continente, rango de poblacion o superficie)
+def filtrar_pais(dataset):
+    limpiar_consola()
+    opciones = {
+        1: "Filtrar Por Continente",
+        2: "Filtrar Por Rango de Poblacion",
+        3: "Filtrar Por Rango de Superficie"
+    }
+    tabla = Table(show_lines=True)
+    tabla.add_column("Filtrar Paises", style="bold", justify="center")
+    for num, desc in opciones.items():
+        tabla.add_row(f"{num}) {desc}")
+    Console().print(tabla)
+    opcion = validacion_entero("Ingrese una opcion: ", None, False)
+    
+    if opcion == 1:
+        limpiar_consola()
+        filtrar_por_continente(dataset)
+    elif opcion == 2:
+        limpiar_consola()
+        filtrar_por_poblacion(dataset)
+    elif opcion == 3:
+        limpiar_consola()
+        filtrar_por_superficie(dataset)
+    else:
+        mensaje_error("ERROR! Opcion fuera de rango")
+
+# Funcion menu de continentes
+def filtrar_por_continente(dataset):
+    continentes = {
+        1: "Africa",
+        2: "America",
+        3: "Asia",
+        4: "Europa",
+        5: "Oceania"
+    }
+    tabla = Table(show_lines=True)
+    tabla.add_column("Filtrar Por Continentes", justify="center")
+    for num, cont in continentes.items():
+        tabla.add_row(f"{num}) {cont}")
+    Console().print(tabla)
+    opcion = validacion_entero("Ingrese una opcion: ", None, False)
+    
+    if opcion in continentes:
+        limpiar_consola()
+        paises_por_continente(opcion, dataset)
+    else:
+        mensaje_error("ERROR! Opcion fuera de rango")
+
+# Funcion para filtrar países por población
+def filtrar_por_poblacion(dataset):
+    poblacion_min = validacion_entero("Ingrese la poblacion minima: ", None, False)
+    poblacion_max = validacion_entero("Ingrese la poblacion maxima: ", None, False)
+
+    if poblacion_min > poblacion_max:
+        mensaje_error("ERROR! La poblacion minima no puede ser mayor a la maxima")
+    else:
+        contador = 0
+        poblacion = []
+        for pais in dataset:
+            if poblacion_min <= pais["poblacion"] <= poblacion_max:
+                poblacion.append({
+                    "nombre": pais["nombre"],
+                    "poblacion": pais["poblacion"],
+                    "superficie": pais["superficie"],
+                    "continente": pais["continente"]
+                })
+                contador += 1
+        if contador != 0:
+            limpiar_consola()
+            tabla = Table(title_style="bold bright_green", title=f"Paises con poblacion entre {poblacion_min} y {poblacion_max}", show_lines= True)
+            armar_tabla(poblacion, tabla)
+        else:
+            mensaje_error(f"No se encontrar paises con poblacion entre {poblacion_min} y {poblacion_max}")
+
+# Funcion para filtrar países por superficie
+def filtrar_por_superficie(dataset):
+    superficie_min = validacion_float("Ingrese la superficie minima (en km2): ", None)
+    superficie_max = validacion_float("Ingrese la superficie maxima (en km2): ", None)
+
+    if superficie_min > superficie_max:
+        mensaje_error("ERROR! La superficie minima no puede ser mayor a la maxima")
+    else:
+        contador = 0
+        poblacion = []
+        for pais in dataset:
+            if superficie_min <= pais["superficie"] <= superficie_max:
+                poblacion.append({
+                    "nombre": pais["nombre"],
+                    "poblacion": pais["poblacion"],
+                    "superficie": pais["superficie"],
+                    "continente": pais["continente"]
+                })
+                contador += 1
+        if contador != 0:
+            limpiar_consola()
+            tabla = Table(title_style="bold bright_green", title=f"Paises con poblacion entre {superficie_min} y {superficie_max}", show_lines= True)
+            armar_tabla(poblacion, tabla)
+        else:
+            mensaje_error(f"No se encontrar paises con poblacion entre {superficie_min} y {superficie_max}")
+
+# Funcion para filtrar países por continente
+def paises_por_continente(opcion, dataset):
+    continentes = {
+        1: "Africa",
+        2: "America",
+        3: "Asia",
+        4: "Europa",
+        5: "Oceania"
+    }
+    
+    if opcion not in continentes:
+        mensaje_error("ERROR! Continente no válido")
+        return
+    
+    continente = continentes[opcion]
+    paises_filtrados = []
+    for pais in dataset:
+        if pais["continente"] == continente:
+            paises_filtrados.append({
+                "nombre": pais["nombre"],
+                "poblacion": pais["poblacion"],
+                "superficie": pais["superficie"],
+                "continente": pais["continente"]
+            })
+    
+    if paises_filtrados:
+        tabla = Table(title=f"Paises de {continente}", show_lines=True, title_style="bold bright_green")
+        armar_tabla(paises_filtrados, tabla)
+    else:
+        mensaje_error(f"No se encuentran paises registrados de {continente}")
+
+# Funcion para mostrar estadisticas de paises
 def mostrar_estadisticas(dataset):
     limpiar_consola()
     if not dataset:

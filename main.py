@@ -17,7 +17,7 @@ while True:
         case 3: # Buscar un país por nombre (coincidencia parcial o exacta)
             buscar_paises(dataset)
         case 4: # Filtrar por contiente, rango de poblacióno o rango de superficie
-            pass
+            filtrar_pais(dataset)
         case 5: # Ordenar países por nombre, población o superficie (ascendente o descendente)
             pass
         case 6: # Mostrar estadísticas como país con mayor y menor población, promedio de población, promedio de superficie o cantidad de países por continente
