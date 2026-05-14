@@ -6,14 +6,14 @@ Este programa es una aplicación de consola que permite gestionar un dataset de 
 ## Instrucciones de uso
 ### Requisitos previos
 - Python 3.14.x o superior instalado en el sistema.
-- Instalación de las bibliotecas necesarias utilizando (instalación obligatoria para el correcto funcionamiento del programa):
+- Instalación de las bibliotecas necesarias utilizando:
 ```bash
 pip install colorama rich
 ```
 > La librería `colorama` se utiliza para mejorar la visualización de los mensajes en la consola, mientras que `rich` se emplea para mostrar tablas y otros elementos de forma más atractiva.
 
 > [!CAUTION]
-> Recomendamos utilizar un entorno virtual para instalar las dependencias y evitar conflictos con otras bibliotecas instaladas globalmente.
+> La instalación de estas librerias es obligatoria para el correcto funcionamiento del programa. Recomendamos utilizar un entorno virtual para instalar las dependencias y evitar conflictos con otras bibliotecas instaladas globalmente.
 - El archivo `dataset.csv` debe estar presente en el mismo directorio que el programa para cargar los datos de los países. Si el archivo no está presente, el programa cargará un dataset inicial predefinido.
 ### Ejecución del programa
 1. Clonar el repositorio o descargar los archivos del programa.
