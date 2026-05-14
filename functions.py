@@ -406,6 +406,148 @@ def paises_por_continente(opcion, dataset):
     else:
         mensaje_error(f"No se encuentran paises registrados de {continente}")
 
+# Funcion para obetener el valor de poblacion
+def obterner_poblacion(dataset):
+    return dataset["poblacion"]
+
+# Funcion para obetener el valor de nombre
+def obterner_nombre(dataset):
+    return dataset["nombre"]
+
+# Funcion para obetener el valor de superficie
+def obterner_superfice(dataset):
+    return dataset["superficie"]
+
+# Funcion para ordenar paises por poblacion de manera ascendente o descendente
+def ordenar_por_poblacion(dataset):
+    limpiar_consola()
+    opciones = {
+        1: "Ascendente",
+        2: "Descendente"
+    }
+
+    tabla = Table(title="ORDENAMIENTO POR POBLACIÓN", title_style="bold light_green", show_lines=True)
+    tabla.add_column("Elija el formato de ordenamiento", style="bold bright_yellow", justify="center")
+
+    for opc, num in opciones.items():
+        tabla.add_row(f"{opc}) {num}")
+    Console().print(tabla)
+
+    opcion = validacion_entero("Ingrese una opcion: ", None, False, False, True)
+
+    if opcion == 1:
+        reverse = False
+    elif opcion == 2:
+        reverse = True
+    else:
+        print("Opción no válida")
+        return
+
+    paises_ordenados = sorted(dataset, key=obterner_poblacion, reverse=reverse)
+    if opcion == 1:
+        tabla_ordenados = Table(show_lines=True, title=f"PAISES ORDENADOS POR POBLACION DE FORMA ASCENDENTE")
+    elif opcion == 2:
+        tabla_ordenados = Table(show_lines=True, title=f"PAISES ORDENADOS POR POBLACION DE FORMA DESCENDENTE")
+    
+    limpiar_consola()
+    armar_tabla(paises_ordenados, tabla_ordenados)
+
+# Funcion para ordenar paises por nombre de manera ascendente o descendente
+def ordenar_por_nombre(dataset):
+    limpiar_consola()
+    opciones = {
+        1: "Ascendente",
+        2: "Descendente"
+    }
+
+    tabla = Table(title="ORDENAMIENTO POR NOMBRE", title_style="bold light_green", show_lines=True)
+    tabla.add_column("Elija el formato de ordenamiento", style="bold bright_yellow", justify="center")
+
+    for opc, num in opciones.items():
+        tabla.add_row(f"{opc}) {num}")
+    Console().print(tabla)
+
+    opcion = validacion_entero("Ingrese una opcion: ", None, False, False, True)
+
+    if opcion == 1:
+        reverse = False
+    elif opcion == 2:
+        reverse = True
+    else:
+        print("Opción no válida")
+        return
+
+    paises_ordenados = sorted(dataset, key=obterner_nombre, reverse=reverse)
+    if opcion == 1:
+        tabla_ordenados = Table(show_lines=True, title=f"PAISES ORDENADOS POR NOMBRE DE FORMA ASCENDENTE")
+    elif opcion == 2:
+        tabla_ordenados = Table(show_lines=True, title=f"PAISES ORDENADOS POR NOMBRE DE FORMA DESCENDENTE")
+    
+    limpiar_consola()
+    armar_tabla(paises_ordenados, tabla_ordenados)
+
+# Funcion para ordenar paises por superficie de manera ascendente o descendente
+def ordenar_por_superficie(dataset):
+    limpiar_consola()
+    opciones = {
+        1: "Ascendente",
+        2: "Descendente"
+    }
+
+    tabla = Table(title="ORDENAMIENTO POR SUPERFICIE", title_style="bold light_green", show_lines=True)
+    tabla.add_column("Elija el formato de ordenamiento", style="bold bright_yellow", justify="center")
+
+    for opc, num in opciones.items():
+        tabla.add_row(f"{opc}) {num}")
+    Console().print(tabla)
+
+    opcion = validacion_entero("Ingrese una opcion: ", None, False, False, True)
+
+    if opcion == 1:
+        reverse = False
+    elif opcion == 2:
+        reverse = True
+    else:
+        print("Opción no válida")
+        return
+
+    paises_ordenados = sorted(dataset, key=obterner_superfice, reverse=reverse)
+    if opcion == 1:
+        tabla_ordenados = Table(show_lines=True, title=f"PAISES ORDENADOS POR SUPERFICIE DE FORMA ASCENDENTE")
+    elif opcion == 2:
+        tabla_ordenados = Table(show_lines=True, title=f"PAISES ORDENADOS POR SUPERFICIE DE FORMA DESCENDENTE")
+    
+    limpiar_consola()
+    armar_tabla(paises_ordenados, tabla_ordenados)
+
+# Funcion con menu de ordenamiento
+def ordenar_países(dataset):
+    limpiar_consola()
+    opciones = {
+        1: "Ordenar Por Nombre",
+        2: "Ordenar Por Población",
+        3: "Ordenar Por Superfice"
+    }
+
+    tabla = Table(show_lines=True)
+    tabla.add_column("Elija una opción", style="bold bright_yellow", justify="center")
+
+    for opc, num in opciones.items():
+        tabla.add_row(f"{opc}) {num}")
+    Console().print(tabla)
+
+    opcion = validacion_entero("Ingrese una opcion: ", None, False, False, True)
+
+    match opcion:
+        case 1:
+            ordenar_por_nombre(dataset)
+        case 2:
+            ordenar_por_poblacion(dataset)
+        case 3:
+            ordenar_por_superficie(dataset)
+        case _:
+            print("ERROR! Opcion fuera de rango")
+
 # Funcion para mostrar estadisticas de paises
 def mostrar_estadisticas(dataset):
     limpiar_consola()

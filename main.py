@@ -24,7 +24,7 @@ while True:
         case 4: # Filtrar por contiente, rango de poblacióno o rango de superficie
             filtrar_pais(dataset)
         case 5: # Ordenar países por nombre, población o superficie (ascendente o descendente)
-            pass
+            ordenar_países(dataset)
         case 6: # Mostrar estadísticas como país con mayor y menor población, promedio de población, promedio de superficie o cantidad de países por continente
             mostrar_estadisticas(dataset)
         case 7: # Salir del programa
