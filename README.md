@@ -1,14 +1,12 @@
 # UTN TUP - TPI Programación 1
 
----
-
 ## Descripción del programa
 Este programa es una aplicación de consola que permite gestionar un dataset de países. El programa ofrece funcionalidades para cargar datos desde un archivo CSV, mostrar información sobre los países, realizar búsquedas, agregar nuevos países, eliminar países existentes y guardar los cambios realizados en el archivo CSV. El programa está diseñado para ser fácil de usar y proporciona mensajes de error claros en caso de que ocurran problemas durante la carga o manipulación de los datos.
 
 ## Instrucciones de uso
 ### Requisitos previos
 - Python 3.14.x o superior instalado en el sistema.
-- Instalación de las bibliotecas necesarias utilizando (instalación obligatioria para el correcto funcionamiento del programa):
+- Instalación de las bibliotecas necesarias utilizando (instalación obligatoria para el correcto funcionamiento del programa):
 ```bash
 pip install colorama rich
 ```
