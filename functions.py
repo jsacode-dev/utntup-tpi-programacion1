@@ -6,6 +6,7 @@ import time
 from colorama import Fore, Back, Style
 from rich.console import Console
 from rich.table import Table
+from rich import box
 
 # - - - - Funciones de colores - - - -
 
@@ -191,8 +192,8 @@ def mostrar_menu():
         7: "Salir del programa",
     }
 
-    tabla = Table(show_lines=True)
-    tabla.add_column("MENU PRICIPAL", style="bold bright_yellow", justify="center", header_style="bold black")
+    tabla = Table(show_lines=True, box=box.HEAVY)
+    tabla.add_column("MENU PRICIPAL", style="bold bright_yellow", justify="center", header_style="bold grey3")
 
     for k,v in menu.items():
         tabla.add_row(f"{k}) {v}")
@@ -239,7 +240,7 @@ def actualizar_pais(dataset):
         for pais in dataset:
             if pais["nombre"].lower() == nombre.lower():
                 modificado = False
-                tabla = Table(show_lines=True, title="DATOS ACTUALES DEL PAIS", title_style="bold bright_cyan", title_justify="center")
+                tabla = Table(show_lines=True, title="DATOS ACTUALES DEL PAIS", title_style="bold bright_cyan", title_justify="center", box=box.HEAVY)
                 mostrar_pais(tabla, pais)
                 poblacion = validacion_entero("Ingrese la nueva población del país (presione ENTER para omitir): ", None, True, True, True)
                 superficie = validacion_float("Ingrese la nueva superficie del país en km2 (presione ENTER para omitir): ", None, True, False, True)
@@ -274,7 +275,7 @@ def buscar_paises(dataset):
                 "superficie": pais["superficie"],
                 "continente": pais["continente"]
             })
-            tabla = Table(show_lines=True, title="RESULTADOS ENCONTRADOS", title_style="bold bright_cyan", title_justify="center")
+            tabla = Table(show_lines=True, title="RESULTADOS ENCONTRADOS", title_style="bold bright_cyan", title_justify="center", box=box.HEAVY)
     if not encontrado:
         mensaje_error("No se encontraron paises relacionados a esa busqueda!")
         limpiar_consola(1.5)
@@ -289,7 +290,7 @@ def filtrar_pais(dataset):
         2: "Filtrar Por Rango de Poblacion",
         3: "Filtrar Por Rango de Superficie"
     }
-    tabla = Table(show_lines=True)
+    tabla = Table(show_lines=True, box=box.HEAVY)
     tabla.add_column("Filtrar Paises", style="bold bright_yellow", justify="center", header_style="bold black")
     for num, desc in opciones.items():
         tabla.add_row(f"{num}) {desc}")
@@ -317,7 +318,7 @@ def filtrar_por_continente(dataset):
         4: "Europa",
         5: "Oceania"
     }
-    tabla = Table(show_lines=True)
+    tabla = Table(show_lines=True, box=box.HEAVY)
     tabla.add_column("Filtrar Por Continentes", justify="center", style="bold bright_yellow", header_style="bold black")
     for num, cont in continentes.items():
         tabla.add_row(f"{num}) {cont}")
@@ -351,10 +352,11 @@ def filtrar_por_poblacion(dataset):
                 contador += 1
         if contador != 0:
             limpiar_consola()
-            tabla = Table(title_style="bold bright_cyan", title=f"Paises con poblacion entre {poblacion_min} y {poblacion_max}", show_lines= True)
+            tabla = Table(title_style="bold bright_cyan", title=f"Paises con poblacion entre {poblacion_min} y {poblacion_max} habitantes", show_lines= True, box=box.HEAVY)
             armar_tabla(poblacion, tabla)
         else:
             mensaje_error(f"No se encontrar paises con poblacion entre {poblacion_min} y {poblacion_max}")
+            esperar_tecla()
 
 # Funcion para filtrar países por superficie
 def filtrar_por_superficie(dataset):
@@ -377,10 +379,11 @@ def filtrar_por_superficie(dataset):
                 contador += 1
         if contador != 0:
             limpiar_consola()
-            tabla = Table(title_style="bold bright_cyan", title=f"Paises con poblacion entre {superficie_min} y {superficie_max}", show_lines= True)
+            tabla = Table(title_style="bold bright_cyan", title=f"Paises con poblacion entre {superficie_min} km2 y {superficie_max} km2", show_lines= True, box=box.HEAVY)
             armar_tabla(poblacion, tabla)
         else:
-            mensaje_error(f"No se encontrar paises con poblacion entre {superficie_min} y {superficie_max}")
+            mensaje_error(f"No se encontrar paises con poblacion entre {superficie_min} km2 y {superficie_max} km2")
+            esperar_tecla()
 
 # Funcion para filtrar países por continente
 def paises_por_continente(opcion, dataset):
@@ -408,7 +411,7 @@ def paises_por_continente(opcion, dataset):
             })
 
     if paises_filtrados:
-        tabla = Table(title=f"Paises de {continente}", show_lines=True, title_style="bold bright_cyan")
+        tabla = Table(title=f"Paises de {continente}", show_lines=True, title_style="bold bright_cyan", box=box.HEAVY)
         armar_tabla(paises_filtrados, tabla)
     else:
         mensaje_error(f"No se encuentran paises registrados de {continente}")
@@ -434,32 +437,35 @@ def ordenar_por_poblacion(dataset):
         2: "Descendente"
     }
 
-    tabla = Table(title="ORDENAMIENTO POR POBLACIÓN", title_style="bold light_green", show_lines=True)
-    tabla.add_column("Elija el formato de ordenamiento", style="bold bright_yellow", justify="center", header_style="bold black")
+    tabla = Table(title="ORDENAMIENTO POR POBLACIÓN", title_style="bold grey3", show_lines=True, box=box.HEAVY)
+    tabla.add_column("Elija el formato de ordenamiento", style="bold bright_yellow", justify="center", header_style="bold grey3")
 
     for opc, num in opciones.items():
         tabla.add_row(f"{opc}) {num}")
     Console().print(tabla)
 
-    opcion = validacion_entero("Ingrese una opcion: ", None, False, False, True)
+    while True:
+        opcion = validacion_entero("Ingrese una opcion: ", None, False, False, True)
 
-    if opcion == 1:
-        reverse = False
-    elif opcion == 2:
-        reverse = True
-    else:
-        mensaje_error("Opción no válida")
-        esperar_tecla()
-        return
+        if opcion == 1:
+            reverse = False
+            break
+        elif opcion == 2:
+            reverse = True
+            break
+        else:
+            mensaje_error("Opción no válida")
+            
 
     paises_ordenados = sorted(dataset, key=obterner_poblacion, reverse=reverse)
     if opcion == 1:
-        tabla_ordenados = Table(show_lines=True, title=f"PAISES ORDENADOS POR POBLACION DE FORMA ASCENDENTE")
+        tabla_ordenados = Table(show_lines=True, title=f"PAISES ORDENADOS POR POBLACION DE FORMA ASCENDENTE", box=box.HEAVY, title_style ="bold bright_cyan")
     elif opcion == 2:
-        tabla_ordenados = Table(show_lines=True, title=f"PAISES ORDENADOS POR POBLACION DE FORMA DESCENDENTE")
-    
+        tabla_ordenados = Table(show_lines=True, title=f"PAISES ORDENADOS POR POBLACION DE FORMA DESCENDENTE", box=box.HEAVY, title_style ="bold bright_cyan")
+        
     limpiar_consola()
     armar_tabla(paises_ordenados, tabla_ordenados)
+
 
 # Funcion para ordenar paises por nombre de manera ascendente o descendente
 def ordenar_por_nombre(dataset):
@@ -469,29 +475,30 @@ def ordenar_por_nombre(dataset):
         2: "Descendente"
     }
 
-    tabla = Table(title="ORDENAMIENTO POR NOMBRE", title_style="bold light_green", show_lines=True)
-    tabla.add_column("Elija el formato de ordenamiento", style="bold bright_yellow", justify="center", header_style="bold black")
+    tabla = Table(title="ORDENAMIENTO POR NOMBRE", title_style="bold grey3", show_lines=True, box=box.HEAVY)
+    tabla.add_column("Elija el formato de ordenamiento", style="bold bright_yellow", justify="center", header_style="bold grey3")
 
     for opc, num in opciones.items():
         tabla.add_row(f"{opc}) {num}")
     Console().print(tabla)
 
-    opcion = validacion_entero("Ingrese una opcion: ", None, False, False, True)
+    while True:
+        opcion = validacion_entero("Ingrese una opcion: ", None, False, False, True)
 
-    if opcion == 1:
-        reverse = False
-    elif opcion == 2:
-        reverse = True
-    else:
-        mensaje_error("Opción no válida")
-        esperar_tecla()
-        return
+        if opcion == 1:
+            reverse = False
+            break
+        elif opcion == 2:
+            reverse = True
+            break
+        else:
+            mensaje_error("Opción no válida")
 
     paises_ordenados = sorted(dataset, key=obterner_nombre, reverse=reverse)
     if opcion == 1:
-        tabla_ordenados = Table(show_lines=True, title=f"PAISES ORDENADOS POR NOMBRE DE FORMA ASCENDENTE")
+        tabla_ordenados = Table(show_lines=True, title=f"PAISES ORDENADOS POR NOMBRE DE FORMA ASCENDENTE", box=box.HEAVY, title_style ="bold bright_cyan")
     elif opcion == 2:
-        tabla_ordenados = Table(show_lines=True, title=f"PAISES ORDENADOS POR NOMBRE DE FORMA DESCENDENTE")
+        tabla_ordenados = Table(show_lines=True, title=f"PAISES ORDENADOS POR NOMBRE DE FORMA DESCENDENTE", box=box.HEAVY, title_style ="bold bright_cyan")
     
     limpiar_consola()
     armar_tabla(paises_ordenados, tabla_ordenados)
@@ -504,8 +511,8 @@ def ordenar_por_superficie(dataset):
         2: "Descendente"
     }
 
-    tabla = Table(title="ORDENAMIENTO POR SUPERFICIE", title_style="bold light_green", show_lines=True)
-    tabla.add_column("Elija el formato de ordenamiento", style="bold bright_yellow", justify="center", header_style="bold black")
+    tabla = Table(title="ORDENAMIENTO POR SUPERFICIE", title_style="bold grey3", show_lines=True, box=box.HEAVY)
+    tabla.add_column("Elija el formato de ordenamiento", style="bold bright_yellow", justify="center", header_style="bold grey3")
 
     for opc, num in opciones.items():
         tabla.add_row(f"{opc}) {num}")
@@ -513,20 +520,21 @@ def ordenar_por_superficie(dataset):
 
     opcion = validacion_entero("Ingrese una opcion: ", None, False, False, True)
 
-    if opcion == 1:
-        reverse = False
-    elif opcion == 2:
-        reverse = True
-    else:
-        mensaje_error("Opción no válida")
-        esperar_tecla()
-        return
+    while True:
+        if opcion == 1:
+            reverse = False
+            break
+        elif opcion == 2:
+            reverse = True
+            break
+        else:
+            mensaje_error("Opción no válida")
 
     paises_ordenados = sorted(dataset, key=obterner_superfice, reverse=reverse)
     if opcion == 1:
-        tabla_ordenados = Table(show_lines=True, title=f"PAISES ORDENADOS POR SUPERFICIE DE FORMA ASCENDENTE")
+        tabla_ordenados = Table(show_lines=True, title=f"PAISES ORDENADOS POR SUPERFICIE DE FORMA ASCENDENTE", box=box.HEAVY, title_style ="bold bright_cyan")
     elif opcion == 2:
-        tabla_ordenados = Table(show_lines=True, title=f"PAISES ORDENADOS POR SUPERFICIE DE FORMA DESCENDENTE")
+        tabla_ordenados = Table(show_lines=True, title=f"PAISES ORDENADOS POR SUPERFICIE DE FORMA DESCENDENTE", box=box.HEAVY, title_style ="bold bright_cyan")
     
     limpiar_consola()
     armar_tabla(paises_ordenados, tabla_ordenados)
@@ -540,25 +548,28 @@ def ordenar_países(dataset):
         3: "Ordenar Por Superfice"
     }
 
-    tabla = Table(show_lines=True)
+    tabla = Table(show_lines=True, box=box.HEAVY)
     tabla.add_column("Elija una opción", style="bold bright_yellow", justify="center", header_style="bold black")
 
     for opc, num in opciones.items():
         tabla.add_row(f"{opc}) {num}")
     Console().print(tabla)
 
-    opcion = validacion_entero("Ingrese una opcion: ", None, False, False, True)
+    while True:
+        opcion = validacion_entero("Ingrese una opcion: ", None, False, False, True)
 
-    match opcion:
-        case 1:
-            ordenar_por_nombre(dataset)
-        case 2:
-            ordenar_por_poblacion(dataset)
-        case 3:
-            ordenar_por_superficie(dataset)
-        case _:
-            mensaje_error("ERROR! Opcion fuera de rango")
-            esperar_tecla()
+        match opcion:
+            case 1:
+                ordenar_por_nombre(dataset)
+                break
+            case 2:
+                ordenar_por_poblacion(dataset)
+                break
+            case 3:
+                ordenar_por_superficie(dataset)
+                break
+            case _:
+                mensaje_error("ERROR! Opcion fuera de rango")
 
 # Funcion para armar las dos tablas de estadisticas
 def armar_tabla_estadisticas(datos):
@@ -583,8 +594,8 @@ def armar_tabla_estadisticas(datos):
 # Funcion para mostrar estadisticas de paises
 def mostrar_estadisticas(dataset):
     limpiar_consola()
-    tabla_continente = Table(title="PAISES POR CONTINETE", title_style="bold bright_cyan", show_lines= True)
-    tabla_estadisticas = Table(title="ESTADISTICAS", title_style="bold bright_cyan", show_lines= True)
+    tabla_continente = Table(title="PAISES POR CONTINETE", title_style="bold bright_cyan", show_lines= True, box=box.HEAVY)
+    tabla_estadisticas = Table(title="ESTADISTICAS", title_style="bold bright_cyan", show_lines= True, box=box.HEAVY)
     if not dataset:
         mensaje_error("No hay datos disponibles para mostrar estadísticas.")
         limpiar_consola(1.5)
