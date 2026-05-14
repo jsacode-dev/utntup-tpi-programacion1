@@ -115,10 +115,10 @@ def esperar_tecla():
 
 # Funcion para armar una tabla
 def armar_tabla(lista, table):
-    table.add_column("País", style="bold magenta", header_style="bold bright_green", justify="center")
-    table.add_column("Población", style="bold magenta", header_style="bold bright_green", justify="center")
-    table.add_column("Superficie", style="bold magenta", header_style="bold bright_green", justify="center")
-    table.add_column("Continente", style="bold magenta", header_style="bold bright_green", justify="center")
+    table.add_column("País", style="bold light_salmon1", header_style="bold bright_cyan", justify="center")
+    table.add_column("Población", style="bold light_salmon1", header_style="bold bright_cyan", justify="center")
+    table.add_column("Superficie", style="bold light_salmon1", header_style="bold bright_cyan", justify="center")
+    table.add_column("Continente", style="bold light_salmon1", header_style="bold bright_cyan", justify="center")
     for pais in lista:
         table.add_row(f"{pais["nombre"]}", f"{pais["poblacion"]}", f"{pais["superficie"]}", f"{pais["continente"]}")
     Console().print(table)
@@ -192,17 +192,21 @@ def mostrar_menu():
     }
 
     tabla = Table(show_lines=True)
-    tabla.add_column("MENU PRICIPAL", style="bold bright_yellow", justify="center")
+    tabla.add_column("MENU PRICIPAL", style="bold bright_yellow", justify="center", header_style="bold black")
 
     for k,v in menu.items():
         tabla.add_row(f"{k}) {v}")
     Console().print(tabla)
 
 # Funcion para mostrar paises por consola
-def mostrar_pais(pais):
-    for k, v in pais.items():
-        print(f"{k.capitalize()}: {v}")
-    print("-"*50)
+def mostrar_pais(table, pais):
+    table.add_column("País", style="bold light_salmon1", header_style="bold bright_cyan", justify="center")
+    table.add_column("Población", style="bold light_salmon1", header_style="bold bright_cyan", justify="center")
+    table.add_column("Superficie", style="bold light_salmon1", header_style="bold bright_cyan", justify="center")
+    table.add_column("Continente", style="bold light_salmon1", header_style="bold bright_cyan", justify="center")
+
+    table.add_row(f"{pais["nombre"]}", f"{pais["poblacion"]}", f"{pais["superficie"]}", f"{pais["continente"]}")
+    Console().print(table)
 
 # Función para agregar un nuevo país al dataset
 def agregar_pais(dataset):
@@ -227,6 +231,7 @@ def agregar_pais(dataset):
     limpiar_consola(1.5)
     return dataset
 
+# Funcion para actualizar superfice o poblacion de un país
 def actualizar_pais(dataset):
     limpiar_consola()
     nombre = validacion_texto("Ingrese el nombre del país a actualizar: ")
@@ -234,10 +239,10 @@ def actualizar_pais(dataset):
         for pais in dataset:
             if pais["nombre"].lower() == nombre.lower():
                 modificado = False
-                print("Datos actuales del país:")
-                mostrar_pais(pais)
-                poblacion = validacion_entero("Ingrese la nueva población del país (presione ENTER para omitir): ", None, True, True)
-                superficie = validacion_float("Ingrese la nueva superficie del país en km2 (presione ENTER para omitir): ", None, True, False)
+                tabla = Table(show_lines=True, title="DATOS ACTUALES DEL PAIS", title_style="bold bright_cyan", title_justify="center")
+                mostrar_pais(tabla, pais)
+                poblacion = validacion_entero("Ingrese la nueva población del país (presione ENTER para omitir): ", None, True, True, True)
+                superficie = validacion_float("Ingrese la nueva superficie del país en km2 (presione ENTER para omitir): ", None, True, False, True)
                 if poblacion is not None:
                     modificado = True
                     pais["poblacion"] = poblacion
@@ -257,23 +262,25 @@ def actualizar_pais(dataset):
 # Funcion para buscar un pais (coincidencia exacta o parcial)
 def buscar_paises(dataset):
     limpiar_consola()
+    paises_encontrados = []
     busqueda = validacion_texto("Ingrese el nombre del pais: ", None).capitalize()
     encontrado = False
     for pais in dataset:
         if pais["nombre"].startswith(busqueda):
-            if not encontrado:
-                print("-"*50)
-                print("RESULTADOS ENCONTRADOS")
-                print("-"*50)
             encontrado = True
-            mostrar_pais(pais)
+            paises_encontrados.append({
+                "nombre": pais["nombre"],
+                "poblacion": pais["poblacion"],
+                "superficie": pais["superficie"],
+                "continente": pais["continente"]
+            })
+            tabla = Table(show_lines=True, title="RESULTADOS ENCONTRADOS", title_style="bold bright_cyan", title_justify="center")
     if not encontrado:
         mensaje_error("No se encontraron paises relacionados a esa busqueda!")
         limpiar_consola(1.5)
     else:
-        esperar_tecla()
-        limpiar_consola()
-
+        armar_tabla(paises_encontrados, tabla)
+    
 # Funcion para filtrar países (Por continente, rango de poblacion o superficie)
 def filtrar_pais(dataset):
     limpiar_consola()
@@ -283,7 +290,7 @@ def filtrar_pais(dataset):
         3: "Filtrar Por Rango de Superficie"
     }
     tabla = Table(show_lines=True)
-    tabla.add_column("Filtrar Paises", style="bold", justify="center")
+    tabla.add_column("Filtrar Paises", style="bold bright_yellow", justify="center", header_style="bold black")
     for num, desc in opciones.items():
         tabla.add_row(f"{num}) {desc}")
     Console().print(tabla)
@@ -311,7 +318,7 @@ def filtrar_por_continente(dataset):
         5: "Oceania"
     }
     tabla = Table(show_lines=True)
-    tabla.add_column("Filtrar Por Continentes", justify="center")
+    tabla.add_column("Filtrar Por Continentes", justify="center", style="bold bright_yellow", header_style="bold black")
     for num, cont in continentes.items():
         tabla.add_row(f"{num}) {cont}")
     Console().print(tabla)
@@ -344,7 +351,7 @@ def filtrar_por_poblacion(dataset):
                 contador += 1
         if contador != 0:
             limpiar_consola()
-            tabla = Table(title_style="bold bright_green", title=f"Paises con poblacion entre {poblacion_min} y {poblacion_max}", show_lines= True)
+            tabla = Table(title_style="bold bright_cyan", title=f"Paises con poblacion entre {poblacion_min} y {poblacion_max}", show_lines= True)
             armar_tabla(poblacion, tabla)
         else:
             mensaje_error(f"No se encontrar paises con poblacion entre {poblacion_min} y {poblacion_max}")
@@ -370,7 +377,7 @@ def filtrar_por_superficie(dataset):
                 contador += 1
         if contador != 0:
             limpiar_consola()
-            tabla = Table(title_style="bold bright_green", title=f"Paises con poblacion entre {superficie_min} y {superficie_max}", show_lines= True)
+            tabla = Table(title_style="bold bright_cyan", title=f"Paises con poblacion entre {superficie_min} y {superficie_max}", show_lines= True)
             armar_tabla(poblacion, tabla)
         else:
             mensaje_error(f"No se encontrar paises con poblacion entre {superficie_min} y {superficie_max}")
@@ -379,7 +386,7 @@ def filtrar_por_superficie(dataset):
 def paises_por_continente(opcion, dataset):
     continentes = {
         1: "Africa",
-        2: "America",
+        2: "América",
         3: "Asia",
         4: "Europa",
         5: "Oceania"
@@ -399,12 +406,13 @@ def paises_por_continente(opcion, dataset):
                 "superficie": pais["superficie"],
                 "continente": pais["continente"]
             })
-    
+
     if paises_filtrados:
-        tabla = Table(title=f"Paises de {continente}", show_lines=True, title_style="bold bright_green")
+        tabla = Table(title=f"Paises de {continente}", show_lines=True, title_style="bold bright_cyan")
         armar_tabla(paises_filtrados, tabla)
     else:
         mensaje_error(f"No se encuentran paises registrados de {continente}")
+        esperar_tecla()
 
 # Funcion para obetener el valor de poblacion
 def obterner_poblacion(dataset):
@@ -427,7 +435,7 @@ def ordenar_por_poblacion(dataset):
     }
 
     tabla = Table(title="ORDENAMIENTO POR POBLACIÓN", title_style="bold light_green", show_lines=True)
-    tabla.add_column("Elija el formato de ordenamiento", style="bold bright_yellow", justify="center")
+    tabla.add_column("Elija el formato de ordenamiento", style="bold bright_yellow", justify="center", header_style="bold black")
 
     for opc, num in opciones.items():
         tabla.add_row(f"{opc}) {num}")
@@ -440,7 +448,8 @@ def ordenar_por_poblacion(dataset):
     elif opcion == 2:
         reverse = True
     else:
-        print("Opción no válida")
+        mensaje_error("Opción no válida")
+        esperar_tecla()
         return
 
     paises_ordenados = sorted(dataset, key=obterner_poblacion, reverse=reverse)
@@ -461,7 +470,7 @@ def ordenar_por_nombre(dataset):
     }
 
     tabla = Table(title="ORDENAMIENTO POR NOMBRE", title_style="bold light_green", show_lines=True)
-    tabla.add_column("Elija el formato de ordenamiento", style="bold bright_yellow", justify="center")
+    tabla.add_column("Elija el formato de ordenamiento", style="bold bright_yellow", justify="center", header_style="bold black")
 
     for opc, num in opciones.items():
         tabla.add_row(f"{opc}) {num}")
@@ -474,7 +483,8 @@ def ordenar_por_nombre(dataset):
     elif opcion == 2:
         reverse = True
     else:
-        print("Opción no válida")
+        mensaje_error("Opción no válida")
+        esperar_tecla()
         return
 
     paises_ordenados = sorted(dataset, key=obterner_nombre, reverse=reverse)
@@ -495,7 +505,7 @@ def ordenar_por_superficie(dataset):
     }
 
     tabla = Table(title="ORDENAMIENTO POR SUPERFICIE", title_style="bold light_green", show_lines=True)
-    tabla.add_column("Elija el formato de ordenamiento", style="bold bright_yellow", justify="center")
+    tabla.add_column("Elija el formato de ordenamiento", style="bold bright_yellow", justify="center", header_style="bold black")
 
     for opc, num in opciones.items():
         tabla.add_row(f"{opc}) {num}")
@@ -508,7 +518,8 @@ def ordenar_por_superficie(dataset):
     elif opcion == 2:
         reverse = True
     else:
-        print("Opción no válida")
+        mensaje_error("Opción no válida")
+        esperar_tecla()
         return
 
     paises_ordenados = sorted(dataset, key=obterner_superfice, reverse=reverse)
@@ -530,7 +541,7 @@ def ordenar_países(dataset):
     }
 
     tabla = Table(show_lines=True)
-    tabla.add_column("Elija una opción", style="bold bright_yellow", justify="center")
+    tabla.add_column("Elija una opción", style="bold bright_yellow", justify="center", header_style="bold black")
 
     for opc, num in opciones.items():
         tabla.add_row(f"{opc}) {num}")
@@ -546,11 +557,34 @@ def ordenar_países(dataset):
         case 3:
             ordenar_por_superficie(dataset)
         case _:
-            print("ERROR! Opcion fuera de rango")
+            mensaje_error("ERROR! Opcion fuera de rango")
+            esperar_tecla()
+
+# Funcion para armar las dos tablas de estadisticas
+def armar_tabla_estadisticas(datos):
+    tabla_continente, tabla_estadisticas, pais_mayor_poblacion, pais_menor_poblacion, promedio_poblacion, promedio_superficie, paises_por_continente = datos
+    tabla_continente.add_column("CONTINENTE", header_style="bold bright_cyan", justify="center", style="bold bold light_salmon1")
+    tabla_continente.add_column("CANTIDAD", header_style="bold bright_cyan", justify="center", style="bold bold light_salmon1")
+    tabla_estadisticas.add_column("ESTADISTICA", header_style="bold bright_cyan", justify="center", style="bold bold light_salmon1")
+    tabla_estadisticas.add_column("DATO", header_style="bold bright_cyan", justify="center", style="bold bold light_salmon1")
+    tabla_estadisticas.add_row("País con mayor población", f"{pais_mayor_poblacion["nombre"]}: {(pais_mayor_poblacion["poblacion"])} Habitantes")
+    tabla_estadisticas.add_row("País con menor población", f"{pais_menor_poblacion["nombre"]}: {(pais_menor_poblacion["poblacion"])} Habitantes")
+    tabla_estadisticas.add_row("Promedio de población", f"{promedio_poblacion:.2f}")
+    tabla_estadisticas.add_row("Promedio de superficie", f"{promedio_superficie:.2f}")
+
+    for continente, cantidad in paises_por_continente.items():
+        tabla_continente.add_row(f"{continente}", f"{cantidad} país(es)")
+    grid = Table.grid(padding=(0, 4))
+    grid.add_row(tabla_continente, tabla_estadisticas)
+    Console().print(grid)
+    esperar_tecla()
+    limpiar_consola()
 
 # Funcion para mostrar estadisticas de paises
 def mostrar_estadisticas(dataset):
     limpiar_consola()
+    tabla_continente = Table(title="PAISES POR CONTINETE", title_style="bold bright_cyan", show_lines= True)
+    tabla_estadisticas = Table(title="ESTADISTICAS", title_style="bold bright_cyan", show_lines= True)
     if not dataset:
         mensaje_error("No hay datos disponibles para mostrar estadísticas.")
         limpiar_consola(1.5)
@@ -565,13 +599,5 @@ def mostrar_estadisticas(dataset):
         if continente not in paises_por_continente:
             paises_por_continente[continente] = 0
         paises_por_continente[continente] += 1
-    
-    print(f"País con mayor población: {pais_mayor_poblacion['nombre']} ({pais_mayor_poblacion['poblacion']} habitantes)")
-    print(f"País con menor población: {pais_menor_poblacion['nombre']} ({pais_menor_poblacion['poblacion']} habitantes)")
-    print(f"Promedio de población: {promedio_poblacion:.2f} habitantes")
-    print(f"Promedio de superficie: {promedio_superficie:.2f} km2")
-    print("Cantidad de países por continente:")
-    for continente, cantidad in paises_por_continente.items():
-        print(f"  - {continente}: {cantidad} país(es)")
-    esperar_tecla()
-    limpiar_consola()
+
+    armar_tabla_estadisticas((tabla_continente, tabla_estadisticas, pais_mayor_poblacion, pais_menor_poblacion, promedio_poblacion, promedio_superficie, paises_por_continente))
