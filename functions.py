@@ -308,6 +308,7 @@ def filtrar_pais(dataset):
         filtrar_por_superficie(dataset)
     else:
         mensaje_error("ERROR! Opcion fuera de rango")
+        limpiar_consola(1.5)
 
 # Funcion menu de continentes
 def filtrar_por_continente(dataset):
@@ -330,6 +331,7 @@ def filtrar_por_continente(dataset):
         paises_por_continente(opcion, dataset)
     else:
         mensaje_error("ERROR! Opcion fuera de rango")
+        limpiar_consola(1.5)
 
 # Funcion para filtrar países por población
 def filtrar_por_poblacion(dataset):
@@ -338,6 +340,7 @@ def filtrar_por_poblacion(dataset):
 
     if poblacion_min > poblacion_max:
         mensaje_error("ERROR! La poblacion minima no puede ser mayor a la maxima")
+        limpiar_consola(1.5)
     else:
         contador = 0
         poblacion = []
@@ -365,6 +368,7 @@ def filtrar_por_superficie(dataset):
 
     if superficie_min > superficie_max:
         mensaje_error("ERROR! La superficie minima no puede ser mayor a la maxima")
+        limpiar_consola(1.5)
     else:
         contador = 0
         poblacion = []
@@ -397,6 +401,7 @@ def paises_por_continente(opcion, dataset):
     
     if opcion not in continentes:
         mensaje_error("ERROR! Continente no válido")
+        limpiar_consola(1.5)
         return
     
     continente = continentes[opcion]
@@ -455,6 +460,7 @@ def ordenar_por_poblacion(dataset):
             break
         else:
             mensaje_error("Opción no válida")
+            limpiar_consola(1.5)
             
 
     paises_ordenados = sorted(dataset, key=obterner_poblacion, reverse=reverse)
@@ -493,6 +499,7 @@ def ordenar_por_nombre(dataset):
             break
         else:
             mensaje_error("Opción no válida")
+            limpiar_consola(1.5)
 
     paises_ordenados = sorted(dataset, key=obterner_nombre, reverse=reverse)
     if opcion == 1:
@@ -529,6 +536,7 @@ def ordenar_por_superficie(dataset):
             break
         else:
             mensaje_error("Opción no válida")
+            limpiar_consola(1.5)
 
     paises_ordenados = sorted(dataset, key=obterner_superfice, reverse=reverse)
     if opcion == 1:
@@ -570,6 +578,7 @@ def ordenar_países(dataset):
                 break
             case _:
                 mensaje_error("ERROR! Opcion fuera de rango")
+                limpiar_consola(1.5)
 
 # Funcion para armar las dos tablas de estadisticas
 def armar_tabla_estadisticas(datos):
@@ -594,7 +603,7 @@ def armar_tabla_estadisticas(datos):
 # Funcion para mostrar estadisticas de paises
 def mostrar_estadisticas(dataset):
     limpiar_consola()
-    tabla_continente = Table(title="PAISES POR CONTINETE", title_style="bold bright_cyan", show_lines= True, box=box.HEAVY)
+    tabla_continente = Table(title="PAISES POR CONTINENTE", title_style="bold bright_cyan", show_lines= True, box=box.HEAVY)
     tabla_estadisticas = Table(title="ESTADISTICAS", title_style="bold bright_cyan", show_lines= True, box=box.HEAVY)
     if not dataset:
         mensaje_error("No hay datos disponibles para mostrar estadísticas.")

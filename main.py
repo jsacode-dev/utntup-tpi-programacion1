@@ -29,7 +29,8 @@ while True:
             mostrar_estadisticas(dataset)
         case 7: # Salir del programa
             guardar_paises(dataset)
-            print("Gracias por usar el programa. ¡Hasta luego!")
+            mensaje_exito("Gracias por usar el programa. ¡Hasta luego!")
             break
         case _: # Opción no válida
-            print("Opción no válida. Por favor, seleccione una opción del menú.")
+            mensaje_error("Opción no válida. Por favor, seleccione una opción del menú.")
+            limpiar_consola(1.5)
