@@ -41,3 +41,7 @@ python main.py
 ## Participación de los integrantes
 - Juan Santiago Arango ([@jsacode-dev](https://github.com/jsacode-dev))
 - Alvaro David Salla ([@AlvaroSalla](https://github.com/AlvaroSalla))
+
+## Links útiles
+- [Repositorio del proyecto en GitHub](https://github.com/jsacode-dev/utntup-tpi-programacion1) (El repositorio es de acceso público y puede ser clonado para su ejecución).
+- [Link del video explicativo/de demostración](https://youtube.com). **// CAMBIAR POR EL LINK REAL DEL VIDEO**
