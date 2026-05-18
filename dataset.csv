@@ -1,17 +1,17 @@
 nombre,poblacion,superficie,continente
-Argentina,45376763,2780400.0,América
+Argentina,45376763,2780400.0,America
 Japon,125800000,377975.0,Asia
-Brasil,213993437,8515767.0,América
+Brasil,213993437,8515767.0,America
 Alemania,83149300,357022.0,Europa
-Chile,19629590,756102.0,América
-Uruguay,3426260,176215.0,América
-Paraguay,6703799,406752.0,América
-Bolivia,12388571,1098581.0,América
-Peru,33715471,1285216.0,América
-Colombia,52215503,1141748.0,América
-Mexico,129875529,1964375.0,América
-Estados unidos,339996563,9833517.0,América
-Canada,38929902,9984670.0,América
+Chile,19629590,756102.0,America
+Uruguay,3426260,176215.0,America
+Paraguay,6703799,406752.0,America
+Bolivia,12388571,1098581.0,America
+Peru,33715471,1285216.0,America
+Colombia,52215503,1141748.0,America
+Mexico,129875529,1964375.0,America
+Estados unidos,339996563,9833517.0,America
+Canada,38929902,9984670.0,America
 Espana,48373336,505990.0,Europa
 Francia,64756584,551695.0,Europa
 Italia,58870762,301340.0,Europa
@@ -29,4 +29,3 @@ Sudafrica,60414495,1221037.0,Africa
 Marruecos,37457971,446550.0,Africa
 Australia,26638544,7692024.0,Oceania
 Nueva zelanda,5228100,268838.0,Oceania
-Argelia,500000,5000.0,Asia

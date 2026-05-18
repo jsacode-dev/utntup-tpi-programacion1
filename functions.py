@@ -7,6 +7,7 @@ from colorama import Fore, Back, Style
 from rich.console import Console
 from rich.table import Table
 from rich import box
+import unicodedata
 
 # - - - - Funciones de colores - - - -
 
@@ -61,7 +62,7 @@ def validacion_float(mensaje1, mensaje2 = None, negativo = True, cero_incluido =
             mensaje_error(f"Ha ocurrido un error inesperado: {e}")
 
 # Función para validar texto
-def validacion_texto(mensaje1, mensaje2 = None, salto_valor = False):
+def validacion_texto(mensaje1, mensaje2 = None, salto_valor = False, acentos = False):
     while True:
         try:
             texto = input(mensaje1).strip()
@@ -72,6 +73,8 @@ def validacion_texto(mensaje1, mensaje2 = None, salto_valor = False):
                 continue
             if mensaje2 != None:
                 print(mensaje2)
+            if not acentos:
+                texto = normalizar_acentos(texto)
             return texto
         except ValueError:
             mensaje_error("ERROR! Debe ingresar un texto válido")
@@ -101,6 +104,12 @@ def validar_continente(mensaje1, mensaje2 = None):
             mensaje_error(f"Ha ocurrido un error inesperado: {e}")
 
 # - - - - Funciones principales - - - -
+
+# Función para normalizar tildes
+def normalizar_acentos(texto):
+    texto_normalizado = unicodedata.normalize('NFD', texto) # Descomponer caracteres acentuados en caracteres base y marcas de acento
+    texto_sin_acentos = ''.join(caracter for caracter in texto_normalizado if unicodedata.category(caracter) != 'Mn') # Eliminar las marcas de acento (caracteres con categoría 'Mn')
+    return texto_sin_acentos
 
 # Función para borrar la consola (compatible con Windows y Unix)
 def limpiar_consola(tiempo_espera = None):
@@ -335,8 +344,8 @@ def filtrar_por_continente(dataset):
 
 # Funcion para filtrar países por población
 def filtrar_por_poblacion(dataset):
-    poblacion_min = validacion_entero("Ingrese la poblacion minima: ", None, False)
-    poblacion_max = validacion_entero("Ingrese la poblacion maxima: ", None, False)
+    poblacion_min = validacion_entero("Ingrese la poblacion minima: ", None, True, True)
+    poblacion_max = validacion_entero("Ingrese la poblacion maxima: ", None, True, True)
 
     if poblacion_min > poblacion_max:
         mensaje_error("ERROR! La poblacion minima no puede ser mayor a la maxima")
@@ -363,8 +372,8 @@ def filtrar_por_poblacion(dataset):
 
 # Funcion para filtrar países por superficie
 def filtrar_por_superficie(dataset):
-    superficie_min = validacion_float("Ingrese la superficie minima (en km2): ", None)
-    superficie_max = validacion_float("Ingrese la superficie maxima (en km2): ", None)
+    superficie_min = validacion_float("Ingrese la superficie minima (en km2): ", None, True)
+    superficie_max = validacion_float("Ingrese la superficie maxima (en km2): ", None, True)
 
     if superficie_min > superficie_max:
         mensaje_error("ERROR! La superficie minima no puede ser mayor a la maxima")
@@ -383,17 +392,17 @@ def filtrar_por_superficie(dataset):
                 contador += 1
         if contador != 0:
             limpiar_consola()
-            tabla = Table(title_style="bold bright_cyan", title=f"Paises con poblacion entre {superficie_min} km2 y {superficie_max} km2", show_lines= True, box=box.HEAVY)
+            tabla = Table(title_style="bold bright_cyan", title=f"Paises con superficie entre {superficie_min} km2 y {superficie_max} km2", show_lines= True, box=box.HEAVY)
             armar_tabla(poblacion, tabla)
         else:
-            mensaje_error(f"No se encontrar paises con poblacion entre {superficie_min} km2 y {superficie_max} km2")
+            mensaje_error(f"No se encontrar paises con superficie entre {superficie_min} km2 y {superficie_max} km2")
             esperar_tecla()
 
 # Funcion para filtrar países por continente
 def paises_por_continente(opcion, dataset):
     continentes = {
         1: "Africa",
-        2: "América",
+        2: "America",
         3: "Asia",
         4: "Europa",
         5: "Oceania"
@@ -447,11 +456,11 @@ def ordenar_por_poblacion(dataset):
 
     for opc, num in opciones.items():
         tabla.add_row(f"{opc}) {num}")
-    Console().print(tabla)
+    
 
     while True:
+        Console().print(tabla)
         opcion = validacion_entero("Ingrese una opcion: ", None, False, False, True)
-
         if opcion == 1:
             reverse = False
             break
@@ -486,9 +495,9 @@ def ordenar_por_nombre(dataset):
 
     for opc, num in opciones.items():
         tabla.add_row(f"{opc}) {num}")
-    Console().print(tabla)
 
     while True:
+        Console().print(tabla)
         opcion = validacion_entero("Ingrese una opcion: ", None, False, False, True)
 
         if opcion == 1:
@@ -523,11 +532,10 @@ def ordenar_por_superficie(dataset):
 
     for opc, num in opciones.items():
         tabla.add_row(f"{opc}) {num}")
-    Console().print(tabla)
-
-    opcion = validacion_entero("Ingrese una opcion: ", None, False, False, True)
 
     while True:
+        Console().print(tabla)
+        opcion = validacion_entero("Ingrese una opcion: ", None, False, False, True)
         if opcion == 1:
             reverse = False
             break
@@ -561,9 +569,9 @@ def ordenar_países(dataset):
 
     for opc, num in opciones.items():
         tabla.add_row(f"{opc}) {num}")
-    Console().print(tabla)
-
+    
     while True:
+        Console().print(tabla)
         opcion = validacion_entero("Ingrese una opcion: ", None, False, False, True)
 
         match opcion:
