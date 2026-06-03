@@ -16,9 +16,13 @@ while True:
     opcion = validacion_entero("Seleccione una opción: ", None, False) # Acá va validación de string
     match opcion:
         case 1: # Agregar un nuevo país (con todos los datos necesarios)
-            dataset = agregar_pais(dataset)
+            dataset, hubo_cambios = agregar_pais(dataset)
+            if hubo_cambios:
+                guardar_paises(dataset)
         case 2: # Actualizar los datos de población y superficie de un país existente
-            dataset = actualizar_pais(dataset)
+            dataset, hubo_cambios = actualizar_pais(dataset)
+            if hubo_cambios:
+                guardar_paises(dataset)
         case 3: # Buscar un país por nombre (coincidencia parcial o exacta)
             buscar_paises(dataset)
         case 4: # Filtrar por contiente, rango de poblacióno o rango de superficie
@@ -27,7 +31,7 @@ while True:
             ordenar_países(dataset)
         case 6: # Mostrar estadísticas como país con mayor y menor población, promedio de población, promedio de superficie o cantidad de países por continente
             mostrar_estadisticas(dataset)
-        case 7: # Salir del programa
+        case 7: # Salir del programa y guardar los datos en el archivo CSV
             guardar_paises(dataset)
             mensaje_exito("Gracias por usar el programa. ¡Hasta luego!")
             break
