@@ -221,12 +221,11 @@ def mostrar_pais(table, pais):
 # Función para agregar un nuevo país al dataset
 def agregar_pais(dataset):
     limpiar_consola()
-    hubo_cambios = False
     nombre = validacion_texto("Ingrese el nombre del país: ")
     if validar_pais_existente(nombre, dataset):
         mensaje_error(f"El país '{nombre.capitalize()}' ya existe en el sistema. No se puede agregar nuevamente.")
         limpiar_consola(1.5)
-        return dataset, hubo_cambios
+        return dataset, False
     else:
         poblacion = validacion_entero("Ingrese la población del país: ", None, True, True)
         superficie = validacion_float("Ingrese la superficie del país en km2: ", None, True, False)
@@ -238,20 +237,18 @@ def agregar_pais(dataset):
             "continente": continente
         }
         dataset.append(nuevo_pais)
-        hubo_cambios = True
         mensaje_exito(f"País '{nombre.capitalize()}' cargado exitosamente al sistema.")
     limpiar_consola(1.5)
-    return dataset, hubo_cambios
+    return dataset, True
 
 # Funcion para actualizar superfice o poblacion de un país
 def actualizar_pais(dataset):
     limpiar_consola()
-    hubo_cambios = False
+    modificado = False
     nombre = validacion_texto("Ingrese el nombre del país a actualizar: ")
     if validar_pais_existente(nombre, dataset):
         for pais in dataset:
             if pais["nombre"].lower() == nombre.lower():
-                modificado = False
                 tabla = Table(show_lines=True, title="DATOS ACTUALES DEL PAIS", title_style="bold bright_cyan", title_justify="center", box=box.HEAVY)
                 mostrar_pais(tabla, pais)
                 poblacion = validacion_entero("Ingrese la nueva población del país (presione ENTER para omitir): ", None, True, True, True)
@@ -264,14 +261,13 @@ def actualizar_pais(dataset):
                     pais["superficie"] = superficie
                 if modificado:
                     mensaje_exito(f"País '{nombre.capitalize()}' actualizado exitosamente.")
-                    hubo_cambios = True
                 else:
                     mensaje_exito("No se realizaron cambios al país.")
                 break
     else:
         mensaje_error(f"El país '{nombre.capitalize()}' no existe en el sistema. No se puede actualizar.")
     limpiar_consola(1.5)
-    return dataset, hubo_cambios
+    return dataset, modificado
 
 # Funcion para buscar un pais (coincidencia exacta o parcial)
 def buscar_paises(dataset):
