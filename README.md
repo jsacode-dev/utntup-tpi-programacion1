@@ -39,9 +39,19 @@ python main.py
 - Salida: "Ha ocurrido un error al cargar los datos: [mensaje de error específico]"
 
 ## Participación de los integrantes
-- Juan Santiago Arango ([@jsacode-dev](https://github.com/jsacode-dev))
-- Alvaro David Salla ([@AlvaroSalla](https://github.com/AlvaroSalla))
+### Juan Santiago Arango ([@jsacode-dev](https://github.com/jsacode-dev))
+- Estructura inicial.
+- Manejo de carga y descarga de datos desde el archivo CSV.
+- Agregado y modificación de paises.
+- Estadísticas generales.
+- Espera de teclas y limpieza de pantalla.
+### Alvaro David Salla ([@AlvaroSalla](https://github.com/AlvaroSalla))
+- Funciones de validación.
+- Busqueda de países por nombre.
+- Filtrado de países general.
+- Ordenamiento de países por población y superficie.
+- Mejora visual con Rich.
 
 ## Links útiles
-- [Repositorio del proyecto en GitHub](https://github.com/jsacode-dev/utntup-tpi-programacion1) (El repositorio es de acceso público y puede ser clonado para su ejecución).
-- [Link del video explicativo/de demostración](https://youtube.com). **// CAMBIAR POR EL LINK REAL DEL VIDEO**
+- [Repositorio del proyecto en GitHub](https://github.com/jsacode-dev/utntup-tpi-programacion1)
+- [Link del video explicativo/de demostración](https://drive.google.com/file/d/1RlxLiERY3Io9AgSnbmcATNqqjiPw8DZL/view?usp=sharing)
